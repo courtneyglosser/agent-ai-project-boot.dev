@@ -13,6 +13,7 @@ if api_key == None:
 
 parser = argparse.ArgumentParser(description="Chatbot")
 parser.add_argument("user_prompt", type=str, help="User prompt")
+parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
 args = parser.parse_args()
 
 def main():
@@ -34,8 +35,10 @@ def main():
     if res.usage_metadata == None:
         raise RuntimeError("Error connecting to Gemini API")
     else:
-        print (f"Prompt tokens: {res.usage_metadata.prompt_token_count}")
-        print (f"Response tokens: {res.usage_metadata.candidates_token_count}")
+        if args.verbose:
+            print(f"User prompt: {args.user_prompt}")
+            print (f"Prompt tokens: {res.usage_metadata.prompt_token_count}")
+            print (f"Response tokens: {res.usage_metadata.candidates_token_count}")
 
         print (f"Response from Gemini API: {res.text}")
 
