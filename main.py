@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+from prompts import system_prompt
 
 load_dotenv()
 api_key = os.environ.get("GEMINI_API_KEY")
@@ -15,6 +16,10 @@ parser = argparse.ArgumentParser(description="Chatbot")
 parser.add_argument("user_prompt", type=str, help="User prompt")
 parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
 args = parser.parse_args()
+
+config_arg = types.GenerateContentConfig(
+    system_instruction=system_prompt, 
+    temperature=0)
 
 def main():
 
@@ -29,7 +34,8 @@ def main():
 
         res = client.models.generate_content(
                 model='gemini-2.5-flash',
-                contents=messages
+                contents=messages,
+                config=config_arg
         )
 
     if res.usage_metadata == None:
